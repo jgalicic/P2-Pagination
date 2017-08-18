@@ -1,4 +1,5 @@
 $( document ).ready(function() {
+
     
 	const ul = document.querySelector('.student-list');
 	const page = document.querySelector('.page');
@@ -110,16 +111,21 @@ $( document ).ready(function() {
 					}
 				}
 
+				//clear matchedStudents array of any undefined items
+				matchedStudents = $.grep(matchedStudents,function(n){ return n == 0 || n });
+
 				// If there’s no “matched” students…
 				if (matchedStudents.length === 0) {
 					// ...display a “no student’s found” message
 					alert("There are no matched students.")
-					
-				}  
+					$('.pagination').remove();
+				} 
+
 				// If 1-10 students were found…
 				else if (matchedStudents.length <= 10) {
 					$('.pagination').remove();
 				}
+				
 				// If over ten students were found…
 				else if (matchedStudents.length > 10) {
 					$('.pagination').remove();
@@ -127,15 +133,11 @@ $( document ).ready(function() {
 					appendPageLinks(matchedStudents.length);
 					// Call showPage to show first ten students of matched list
 					showPage(1, matchedStudents.length);
-					
-					//Mark page 1 link as active
-
 
 				}
 			}
 		});
 	}
-
 	
 	// Dymanically create search box & button
 	createSearchBox();
