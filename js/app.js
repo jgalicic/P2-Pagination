@@ -14,7 +14,6 @@ $( document ).ready(function() {
 	const input = document.createElement('input');
 	const button = document.createElement('button');
 
-	
 	function createSearchBox() {
 
 		$(".page-header").append(studentSearch);
@@ -22,6 +21,7 @@ $( document ).ready(function() {
 		$(studentSearch).append(input);
 		$(studentSearch).append(button);
 		button.textContent = "Search";
+
 	}
 
 	function showPage(pageNum, studentList) {
@@ -42,7 +42,10 @@ $( document ).ready(function() {
 
 	function appendPageLinks(studentList) {
 		// determine how many pages for this student list
-		let totalPages = Math.ceil(totalItems / itemsPerPage);
+		let totalPages = Math.ceil(studentList / itemsPerPage);
+
+		// create a page link section
+    	const pageListing = document.createElement('ul');
 
     	$(pageListing).addClass('pagination');
     	page.appendChild(pageListing);
@@ -55,6 +58,8 @@ $( document ).ready(function() {
     		pageListing.appendChild(pageNum);
     	}
 
+    	pageListing.firstChild.firstChild.className = "active";
+
     	// Use the showPage function to display the page for the link clicked
     	$('a').on("click", function() {
     		//Remove 'active' class from page links
@@ -63,7 +68,6 @@ $( document ).ready(function() {
     		$(li).hide();
     		// show new page links
     		showPage(this.textContent, studentList);
-    		console.log(studentList);
     		// mark the current link as “active”
     		$(this).addClass('active');
     	});    		  
@@ -99,6 +103,7 @@ $( document ).ready(function() {
 						// ...add this student to list of “matched” student
 						matchedStudents[i] = searchName;
 						$(li[i]).show();
+
 					} else if (searchEmail.indexOf(filter) > -1) {
 						matchedStudents[i] = searchEmail;
 						$(li[i]).show();
@@ -110,12 +115,22 @@ $( document ).ready(function() {
 					// ...display a “no student’s found” message
 					alert("There are no matched students.")
 					
-				}  // If over ten students were found…
+				}  
+				// If 1-10 students were found…
+				else if (matchedStudents.length <= 10) {
+					$('.pagination').remove();
+				}
+				// If over ten students were found…
 				else if (matchedStudents.length > 10) {
+					$('.pagination').remove();
 					// ...call appendPageLinks with the matched students
 					appendPageLinks(matchedStudents.length);
 					// Call showPage to show first ten students of matched list
 					showPage(1, matchedStudents.length);
+					
+					//Mark page 1 link as active
+
+
 				}
 			}
 		});
